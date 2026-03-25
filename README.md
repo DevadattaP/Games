@@ -21,36 +21,57 @@ A **Wordle-style game** implemented in Python with a Tkinter GUI.
 * "Reveal Secret" button (ends the game immediately)
 * Restart option after win/lose
 
+## Clone this repository to get started
+
+```bash
+git clone https://github.com/DevadattaP/Games.git
+```
+
 ### Requirements
 
 * Python 3.8+
 * Tkinter (comes pre-installed with most Python distributions)
-
-### How to Run
+* Install dependencies:
 
 ```bash
-git clone https://github.com/DevadattaP/Games.git
-cd Games
+pip install -r requirements.txt
+```
+
+> [!NOTE]
+> If you are on linux and don't have Tkinter, you can install it via your package manager. For example, on Debian/Ubuntu:
+>
+> ```bash
+> sudo apt-get install python3-tk
+> ```
+
+### Run the game (Example for Wordly)
+
+```bash
 python wordly.py
 ```
 
-### Screenshots
-
-*(optional – add screenshots here later)*
-
-### TODO
-
-* Replace static word list with words fetched from a **word generator / NLP library**
-* Add more games to this repository (planning for yes-no questions game)
-
 ---
+
+## Screenshots
+
+1. Wordly game:
+
+![game window](screenshots/wordly.png) |
 
 ## Future Plans
 
 This repository will grow into a **mini-game collection**, where each game lives in its own file/module. Planned games may include:
 
-* Number guessing
+* Number guessing (binary search style)
+* Finding birthday
+* Finding erased number
 * Hangman
-* Puzzle/logic games
+* word guessing (type words, and you will know how near/far you are)
+* Sudoku (both solver and generator)
+* tic-tac-toe
+* n-queens puzzle
+* zip (like on LinkedIn)
+* patches (like on LinkedIn)
+* More puzzle/logic games
 
-Stay tuned 🚀
+## Keep playing & Stay tuned 🚀

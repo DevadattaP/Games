@@ -1,13 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from wordfreq import top_n_list
 import random
 import string
-
-WORD_LIST = [
-    "APPLE", "GRAPE", "BERRY", "MANGO", "PEACH", "LEMON", "LIME", "PEAR",
-    "PLUMB", "CHERRY", "ORANGE", "BANANA", "KIWI", "GUAVA", "MELON", "APRICOT",
-    "DATES", "FIGS", "OLIVE", "PAPAYA", "LYCHE", "BASIL", "ROSE", "CLOVE"
-]
 
 COLOR_MAP = {
     'green': "#6aaa64",
@@ -40,9 +35,9 @@ class WordlyGame(tk.Tk):
         ttk.Entry(frame, textvariable=self.guesses_var, width=10).grid(row=2, column=1, sticky="w", pady=5)
 
         self.custom_word_var = tk.StringVar()
-        ttk.Label(frame, text="(Optional) Secret word (for testing):").grid(row=3, column=0, sticky="e", pady=5)
-        ttk.Entry(frame, textvariable=self.custom_word_var, width=15).grid(row=3, column=1, sticky="w", pady=5)
-        ttk.Label(frame, text="(leave empty to pick randomly)").grid(row=4, column=0, columnspan=2)
+        # ttk.Label(frame, text="(Optional) Secret word (for testing):").grid(row=3, column=0, sticky="e", pady=5)
+        # ttk.Entry(frame, textvariable=self.custom_word_var, width=15).grid(row=3, column=1, sticky="w", pady=5)
+        # ttk.Label(frame, text="(leave empty to pick randomly)").grid(row=4, column=0, columnspan=2)
 
         ttk.Button(frame, text="Next", command=self._on_start_next).grid(row=5, column=0, columnspan=2, pady=(10,0))
 
@@ -64,16 +59,21 @@ class WordlyGame(tk.Tk):
         self.n_letters = n_letters
         self.n_guesses = n_guesses
         self.secret_word = custom if custom else self._pick_secret(n_letters)
-        print(f"[DEBUG] Secret: {self.secret_word}")
+        # print(f"[DEBUG] Secret: {self.secret_word}")
         self._build_game_screen()
 
     def _pick_secret(self, length):
-        cand = [w.upper() for w in WORD_LIST if len(w) == length]
-        if cand:
-            return random.choice(cand)
-        letters = list(string.ascii_uppercase)
-        random.shuffle(letters)
-        return "".join(letters[:length])
+        # Get common English words (top 500 words)
+        words = top_n_list("en", 500)
+
+        # Filter by length and alphabetic only
+        filtered = [w.upper() for w in words if len(w) == length and w.isalpha()]
+
+        if filtered:
+            return random.choice(filtered)
+
+        # fallback (rare case)
+        return "".join(random.choices(string.ascii_uppercase, k=length))
 
     def _build_game_screen(self):
         for w in self.winfo_children():
@@ -130,7 +130,7 @@ class WordlyGame(tk.Tk):
 
     def _reveal_secret(self):
         messagebox.showinfo("Secret Word", f"The secret word was: {self.secret_word}")
-        if messagebox.askyesno("Play again?", "Do you want to play again?"):
+        if self.ask_yes_no_keyboard("Play again?", "Do you want to play again?"):
             self._build_start_screen()
         else:
             self.destroy()
@@ -207,7 +207,7 @@ class WordlyGame(tk.Tk):
         # Check win
         if guess == self.secret_word.upper():
             messagebox.showinfo("You win!", f"Congratulations! You guessed: {self.secret_word}")
-            if messagebox.askyesno("Play again?", "Play again?"):
+            if self.ask_yes_no_keyboard("Play again?", "Play again?"):
                 self._build_start_screen()
             else:
                 self.destroy()
@@ -217,7 +217,7 @@ class WordlyGame(tk.Tk):
         self.active_row += 1
         if self.active_row >= self.n_guesses:
             messagebox.showinfo("Game Over", f"No guesses left. The word was: {self.secret_word}")
-            if messagebox.askyesno("Play again?", "Play again?"):
+            if self.ask_yes_no_keyboard("Play again?", "Play again?"):
                 self._build_start_screen()
             else:
                 self.destroy()
@@ -264,6 +264,41 @@ class WordlyGame(tk.Tk):
                 else:
                     colors[i] = 'gray'
         return colors
+    
+    def ask_yes_no_keyboard(self, title, message):
+        dialog = tk.Toplevel(self)
+        dialog.title(title)
+        dialog.resizable(False, False)
+        dialog.grab_set()  # make modal
+
+        ttk.Label(dialog, text=message, padding=20).pack()
+
+        result = {"value": False}
+
+        def yes(event=None):
+            result["value"] = True
+            dialog.destroy()
+
+        def no(event=None):
+            result["value"] = False
+            dialog.destroy()
+
+        btn_frame = ttk.Frame(dialog)
+        btn_frame.pack(pady=10)
+
+        ttk.Button(btn_frame, text="Yes", command=yes).pack(side="left", padx=10)
+        ttk.Button(btn_frame, text="No", command=no).pack(side="left", padx=10)
+
+        # Keyboard bindings
+        dialog.bind("y", yes)
+        dialog.bind("Y", yes)
+        dialog.bind("n", no)
+        dialog.bind("N", no)
+        dialog.bind("<Return>", yes)
+        dialog.bind("<Escape>", no)
+
+        dialog.wait_window()
+        return result["value"]
 
 
 if __name__ == "__main__":
