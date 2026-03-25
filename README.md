@@ -8,18 +8,24 @@ Currently includes:
 
 A **Wordle-style game** implemented in Python with a Tkinter GUI.
 
-### Features
+> * Customizable number of letters and guesses
+> * Interactive grid-based interface
+> * Color-coded feedback:
+>   * 🟩 Green for correct letter + position
+>   * 🟨 Yellow for correct letter in wrong position
+>   * ⬛ Gray for incorrect letter
+> * Optionally allow a custom secret word (for testing)
+> * "Reveal Secret" button (ends the game immediately)
+> * Restart option after win/lose
 
-* Customizable number of letters and guesses
-* Interactive grid-based interface
-* Color-coded feedback:
+## 2. Number Guessing Game 🔢
 
-  * 🟩 Green for correct letter + position
-  * 🟨 Yellow for correct letter in wrong position
-  * ⬛ Gray for incorrect letter
-* Optionally allow a custom secret word (for testing)
-* "Reveal Secret" button (ends the game immediately)
-* Restart option after win/lose
+A simple number guessing game where the player tries to guess a randomly generated number within a certain range.
+
+> * Computer guesses a number you are thinking of, or you guess a number the computer has chosen
+> * Customizable range of numbers
+> * Feedback on whether the number is higher or lower than guess, or correct
+> * Counts the number of attempts taken, and computer tells optimal number of attempts based on binary search
 
 ## Clone this repository to get started
 
@@ -52,17 +58,24 @@ python wordly.py
 
 ---
 
+> [!TIP]TODO
+> Add instructions on how to play each game, and any additional features or settings available.
+
 ## Screenshots
 
 1. Wordly game:
 
 ![game window](screenshots/wordly.png) |
+2. Number Guessing Game:
+
+| Computer guesses user's number                         | User guesses computer's number                          |
+|--------------------------------------------------------|---------------------------------------------------------|
+|![computer guesses user](screenshots/number_guess1.png) | ![user guesses computer](screenshots/number_guess2.png) |
 
 ## Future Plans
 
 This repository will grow into a **mini-game collection**, where each game lives in its own file/module. Planned games may include:
 
-* Number guessing (binary search style)
 * Finding birthday
 * Finding erased number
 * Hangman
@@ -75,3 +88,5 @@ This repository will grow into a **mini-game collection**, where each game lives
 * More puzzle/logic games
 
 ## Keep playing & Stay tuned 🚀
+
+Feel free to contribute by adding new games, improving existing ones, or suggesting features!
